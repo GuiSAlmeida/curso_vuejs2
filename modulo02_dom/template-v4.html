@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+  <title></title>
+</head>
+<body>
+  
+  <div id="app">
+    <!-- 
+      Para acessar dados da instancia vue 
+      dentro das propriedades html
+      é necessario usar double mustache {{}} 
+    -->
+    <p>{{ titulo }}</p>
+    <p>{{ saudacao() }}</p>
+
+    <!-- 
+      Para acessar dados da instancia vue 
+      dentro das tags html
+      é necessario usar as diretivas v-bind 
+    -->
+    <a v-bind:href="link">Google</a>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        titulo: 'usando vim',
+        link: 'http://google.com'
+      },
+      methods: {
+        saudacao: function() {
+          console.log(this)
+          return this.titulo
+        }
+      }
+    })
+  </script>
+
+</body>
+</html>

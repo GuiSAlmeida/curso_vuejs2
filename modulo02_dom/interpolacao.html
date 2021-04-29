@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+  <title></title>
+</head>
+
+<body>
+
+  <div id="app">
+    <p>{{ contador }}</p>
+    <p>{{ contador > 5 ? 'maior que 5' : 'menor que  5'}}</p>
+    <button v-on:click="somar">+1</button>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        contador: 0,
+        x: 0,
+        y: 0
+      },
+      methods: {
+        somar() {
+          this.contador++
+        }
+      }
+    })
+  </script>
+
+</body>
+
+</html>

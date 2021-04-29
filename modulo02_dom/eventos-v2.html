@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+  <title></title>
+</head>
+
+<body>
+
+  <div id="app">
+    <p>{{ contador }}</p>
+    <button v-on:click="somar">+1</button>
+    <p v-on:mousemove="coordenadas">Mouse: {{ x }} e {{ y }}.</p>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        contador: 0,
+        x: 0,
+        y: 0
+      },
+      methods: {
+        somar() {
+          this.contador++
+        },
+        coordenadas(event) {
+          console.log(event)
+          this.x = event.clientX
+          this.y = event.clientY
+        }
+      }
+    })
+  </script>
+
+</body>
+
+</html>
