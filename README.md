@@ -57,8 +57,10 @@ linkHtml = '<a href="http://google.com">Google</a>'
 #### 1.1.1.1 Modificadores de Eventos
 
 <details>
-<summary>diretiva.stop</summary>
-> **StopPropagation** usado diretamente na diretiva, para parar propagação do evento.
+<summary>diretiva.stop</summary>  
+
+> **StopPropagation** usado diretamente na diretiva, para parar propagação do evento.  
+
 ```html
 <p v-on:mousemove="mostraCoordenadas">
     Mouse: {{ x }} e {{ y }}.
