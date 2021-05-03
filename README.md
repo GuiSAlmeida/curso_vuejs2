@@ -1,6 +1,6 @@
-# 1. Curso Vue
+# Curso Vue
 
-## 1.1 Diretivas
+## 1 Diretivas
 #### São propriedades passadas dentro das tags **html**
 
 <details>
@@ -43,7 +43,7 @@ linkHtml = '<a href="http://google.com">Google</a>'
 ```
 </details>
 
-### 1.1.1 Eventos
+### 1.1 Eventos
 
 <details>
 <summary>v-on:evento</summary>
@@ -54,7 +54,7 @@ linkHtml = '<a href="http://google.com">Google</a>'
 ```
 </details> 
 
-#### 1.1.1.1 Modificadores de Eventos
+#### 1.1.1 Modificadores de Eventos
 
 <details>
 <summary>diretiva.stop</summary>  
@@ -89,6 +89,53 @@ linkHtml = '<a href="http://google.com">Google</a>'
 <!-- Chama função apenas quando enter for pressionada -->
 <input v-on:keyup.enter.alt="exibirAlerta" type="text">
 <!-- Chama função apenas quando enter+alt forem pressionadas -->
+```
+</details>  
+
+### 1.2 Condicionais  
+
+<details>
+<summary>v-if=condicional</summary>
+Usado para criar uma lógica condicional no template html.  
+
+> Exclui elemento da DOM.
+```html
+<p v-if="logado">Usuário Logado: {{ nome }}</p>
+<p v-else-if="anonimo">Usuário Anônimo</p>
+<p v-else>Nenhum Usuário Logado</p>
+```
+</details> 
+
+<details>
+<summary>v-show=condicional</summary>
+Usado para mostrar ou ocultar elemento no template html.  
+
+> Não exclui elemento da DOM, aplica display: none.
+```html
+<footer v-show="logado">Desenvolvido para vocẽ</footer>
+```
+</details> 
+
+### 1.3 Listas  
+
+<details>
+<summary>v-for=(valor, indice) in array/object</summary>
+Cria um laço de repetição for no elemento.  
+
+> Exclui elemento da DOM.
+```html
+<!-- Laço com array -->
+<ul>
+    <li v-for="(cor, index) in cores">
+        {{ cor }} está no índice {{ index }}
+    </li>
+</ul>
+<!-- Laço com objetos -->
+<ul>
+    <li v-for="pessoa in pessoas">
+        <div v-for="(valor, chave, index) in pessoa">{{index}}) {{ chave }} = {{ valor }}</div>
+    </li>
+</ul>
 ```
 </details> 
 
@@ -127,3 +174,20 @@ watch: {
 },
 ```
 </details>
+
+
+## 2. Referências
+
+Documentação Oficial - Introdução: https://br.vuejs.org/v2/guide/
+
+Documentação Oficial - Sintaxe de Template: https://br.vuejs.org/v2/guide/syntax.html
+
+Documentação Oficial - Manipulação de Eventos: https://br.vuejs.org/v2/guide/events.html
+
+Documentação Oficial - Dados Computados & Observadores: https://br.vuejs.org/v2/guide/computed.html
+
+Documentação Oficial - Interligações de Classe e Estilo: https://br.vuejs.org/v2/guide/class-and-style.html
+
+Documentação Oficial - Renderização Condicional: https://br.vuejs.org/v2/guide/conditional.html
+
+Documentação Oficial - Renderização de Listas: https://br.vuejs.org/v2/guide/list.html
