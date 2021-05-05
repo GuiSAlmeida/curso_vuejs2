@@ -1,0 +1,100 @@
+html {
+    font-family: 'Montserrat', sans-serif;
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+}
+
+.painel {
+    margin: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+.scores {
+    display: flex;
+}
+
+.score {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.score h1 {
+    font-weight: 300;
+    font-size: 1.6rem;
+}
+
+.life-bar {
+    width: 80%;
+    height: 20px;
+    border: 1px solid #aaa;
+}
+
+.life-bar .life {
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    background-color: green;
+}
+
+.life-bar .life.danger {
+    background-color: red;
+}
+
+.results {
+    display: flex;
+    justify-content: center;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.results .win {
+    color: green;
+}
+
+.results .lose {
+    color: red;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+}
+
+.btn {
+    padding: 5px 10px;
+    margin: 0 10px;
+    border-radius: 5px;
+    text-transform: uppercase;
+    font-size: 1.1rem;
+    color: #fff;
+    outline: none;
+}
+
+.start {
+    background-color: #4253af;
+}
+
+.attack {
+    background-color: #e51c23;
+}
+
+.special-attack {
+    background-color: #ff9800;
+    color: #000;
+}
+
+.heal {
+    background-color: #259b24;
+}
+
+.giveup {
+    background-color: #bbb;
+    color: #000;
+}
