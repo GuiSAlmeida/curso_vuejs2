@@ -37,15 +37,50 @@
 
         <div class="painel buttons">
             <template v-if="running">
-                <button class="btn attack">Ataque</button>
-                <button class="btn special-attack">Ataque Especial</button>
-                <button class="btn heal">Curar</button>
-                <button class="btn giveup">Desistir</button>
+                <button 
+                    class="btn attack" 
+                    @click="attack(false)"
+                >
+                    Ataque
+                </button>
+                <button 
+                    class="btn special-attack" 
+                    @click="attack(true)"
+                >
+                    Ataque Especial
+                </button>
+                <button 
+                    class="btn heal"
+                    @click="healAndHurt"
+                >
+                    Curar
+                </button>
+                <button class="btn giveup" @click="running = !running">Desistir</button>
             </template>
 
-            <button class="btn start" v-else @click="running = !running">Iniciar Jogo</button>
+            <button 
+                v-else 
+                class="btn start" 
+                @click="startGame"
+            >
+                Iniciar Jogo
+            </button>
         </div>
-        <div class="painel logs"></div>
+
+        <div 
+            v-if="logs.length"
+            class="painel logs"
+        >
+            <ul>
+                <li 
+                    v-for="log in logs" 
+                    class="log"
+                    :class="log.clas"
+                >
+                    {{ log.text }}
+                </li>
+            </ul>
+        </div>
     </main>
     <script src="app.js"></script>
 </body>
