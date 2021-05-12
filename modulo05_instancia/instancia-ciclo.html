@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ciclo de Vida Instância Vue</title>
+    <script src="https://unpkg.com/vue"></script>
+</head>
+
+<body>
+    <div id="app">
+        <h1>{{ titulo }}</h1>
+        <button @click="titulo += '#'">Alterar título</button>
+        <button @click="$destroy()">Destruir</button>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                titulo: 'Ciclo de vida'
+            },
+            beforeCreate() {
+                console.log('antes de criar instância')
+            },
+            created() {
+                console.log('depois de criar instância')
+            },
+            beforeMount() {
+                console.log('antes de criar template e jogar na DOM')
+            },
+            mounted() {
+                console.log('quando a DOM está montada')
+            },
+            beforeUpdate() {
+                console.log('antes de criar template e jogar na DOM')
+            },
+            updated() {
+                console.log('depois de criar template e atualizar na DOM')
+            },
+            beforeDestroy() {
+                console.log('Chamado uma única vez antes da instância ser destruida');
+            },
+            destroyed() {
+                console.log('Chamado uma única vez depois da instância ser destruida')
+            }
+        })
+    </script>
+</body>
+
+</html>

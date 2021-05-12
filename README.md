@@ -1,65 +1,56 @@
 # Curso Vue
 
 ## 1 Diretivas
-#### São propriedades passadas dentro das tags **html**
+São propriedades passadas dentro das tags **html**
 
-<details>
-<summary>v-bind:propriedade</summary>
-
-> Usado antes de propriedades para acessar valores dentro da instancia do vue e fazer ligação para atributo da tag.
+#### v-bind
+Usado antes de propriedades para acessar valores dentro da instancia do vue e fazer ligação para atributo da tag.
 ```html
 <a v-bind:href="link">Google</a>
 ```
-</details>
 
-<details>
-<summary>v-model</summary>
-
-> Faz a ligação entre view e o template sincronizados, **two-way data binding**.
+#### v-model
+Faz a ligação entre view e o template sincronizados, **two-way data binding**.
 ```html
 <input 
     type="text" 
     v-model="titulo"
 >
 ```
-</details>
 
-<details>
-<summary>v-once</summary>
-
-> Usado para acessar valores dentro da instancia do vue uma **única vez**, se o valor for atualizado ele não será alterado.
+#### v-once
+Usado para acessar valores dentro da instancia do vue uma **única vez**, se o valor for atualizado ele não será alterado.
 ```html
 <p v-once>{{ titulo }}</p>
 ```
-</details> 
 
-<details>
-<summary>v-html</summary>
-
-> Usado para exibir código Html, caso passado nas chaves duplas interpretam os dados como **texto simples**.
+#### v-html
+Usado para exibir código Html, caso passado nas chaves duplas interpretam os dados como **texto simples**.
 ```html
 linkHtml = '<a href="http://google.com">Google</a>'
 <p v-html="linkHtml"></p>
 ```
-</details>
+#### ref
+Cria uma referência para elemento da DOM.
+```html
+<h1 ref="aulaRef">{{ aula }}</h1>
+<script>
+this.$refs.aulaRef.style.color = "red"
+</script>
+```
 
 ### 1.1 Eventos
 
-<details>
-<summary>v-on:evento</summary>
-
-> Usado para ficar escutando evento.
+#### v-on:evento
+Usado para ficar escutando evento.
 ```html
 <button v-on:click="somar">+1</button>
 ```
-</details> 
 
-#### 1.1.1 Modificadores de Eventos
+### 1.1.1 Modificadores de Eventos
 
-<details>
-<summary>diretiva.stop</summary>  
-
-> **StopPropagation** usado diretamente na diretiva, para parar propagação do evento.  
+#### stop  
+**StopPropagation** usado diretamente na diretiva, para parar propagação do evento.  
 
 ```html
 <p v-on:mousemove="mostraCoordenadas">
@@ -67,21 +58,14 @@ linkHtml = '<a href="http://google.com">Google</a>'
     <span v-on:mousemove.stop>Parar aqui</span>
 </p>
 ```
-</details> 
 
-<details>
-<summary>diretiva.prevent</summary>
-
-> **PreventDefault** usado diretamente na diretiva, para prevenir comportamento padrão do browser.
+#### prevent
+**PreventDefault** usado diretamente na diretiva, para prevenir comportamento padrão do browser.
 ```html
 <a v-on:click.prevent href="http://guisalmeida.com">Acesse o site</a>
 ```
-</details> 
-
-<details>
-<summary>diretiva.teclas</summary>
-
-> **PreventDefault** usado diretamente na diretiva, para prevenir comportamento padrão do browser.
+#### teclas(keys) 
+Usadas para emitir um evento especifico.
 ```html
 <input v-on:keyup="exibirAlerta" type="text">
 <!-- Chama função todas vez que uma tecla for pressionada -->
@@ -90,12 +74,9 @@ linkHtml = '<a href="http://google.com">Google</a>'
 <input v-on:keyup.enter.alt="exibirAlerta" type="text">
 <!-- Chama função apenas quando enter+alt forem pressionadas -->
 ```
-</details>  
 
 ### 1.2 Condicionais  
-
-<details>
-<summary>v-if=condicional</summary>
+#### v-if=condicional
 Usado para criar uma lógica condicional no template html.  
 
 > Exclui elemento da DOM.
@@ -104,22 +85,16 @@ Usado para criar uma lógica condicional no template html.
 <p v-else-if="anonimo">Usuário Anônimo</p>
 <p v-else>Nenhum Usuário Logado</p>
 ```
-</details> 
-
-<details>
-<summary>v-show=condicional</summary>
+#### v-show=condicional
 Usado para mostrar ou ocultar elemento no template html.  
 
 > Não exclui elemento da DOM, aplica display: none.
 ```html
 <footer v-show="logado">Desenvolvido para vocẽ</footer>
 ```
-</details> 
 
 ### 1.3 Listas  
-
-<details>
-<summary>v-for=(valor, indice) in array/object</summary>
+#### v-for=(valor, indice) in array/object
 Cria um laço de repetição for no elemento.  
 
 > Exclui elemento da DOM.
@@ -137,15 +112,10 @@ Cria um laço de repetição for no elemento.
     </li>
 </ul>
 ```
-</details> 
 
-</br>
-
-## 1.2 Methods (métodos)
+## 2 Methods (métodos)
 Funções de cada componente.
-
-<details>
-<summary>$event</summary>
+#### $event
 
 > Por padrão ao chamarmos uma função sem passar nenhum paramêtro,
 > o evento é passado automaticamente. Caso necessitamos passar um parâmetro
@@ -153,12 +123,11 @@ Funções de cada componente.
 ```html
 <button v-on:click="somar(5, $event)">+1</button>
 ```
-</details>
 
-## 1.3 Computed (computados)
+## 3 Computed (computados)
 Funções sincronas.
 
-## 1.4 Watch
+## 4 Watch
 Funções assincronas.
 
 <details>
@@ -175,8 +144,73 @@ watch: {
 ```
 </details>
 
+## 5 Ciclo de Vida  
+![image](https://br.vuejs.org/images/lifecycle.png)  
 
-## 2. Referências
+### 5.1 Métodos do Cilco de Vida
+
+#### `beforeCreate()`
+Chamado uma unica vez na criação da instância, antes de criar instância.  
+#### `created()`
+Chamado uma unica vez na criação da instância, depois de criar instância. 
+
+#### `beforeMount()`
+Chamado uma unica vez na criação da instância, antes de criar template e jogar na DOM. 
+
+#### `mounted()`
+Chamado uma unica vez na criação da instância, quando a DOM está montada. 
+
+#### `beforeUpdate()`
+Chamado sempre que houver uma mudança para ser aplicada na DOM, antes de criar template e jogar na DOM. 
+
+#### `updated()`
+Chamado sempre que houver uma mudança para ser aplicada na DOM, depois de criar template e atualizar na DOM. 
+
+#### `beforeDestroy()`
+Chamado uma única vez antes da instância ser destruida. 
+
+#### `destroyed()`
+Chamado uma única vez depois da instância ser destruida. 
+
+<details>
+<summary>Exemplos</summary>  
+
+```js
+new Vue({
+    el: '#app',
+    data: {
+        titulo: 'Ciclo de vida'
+    },
+    beforeCreate() {
+        console.log('antes de criar instância')
+    },
+    created() {
+        console.log('depois de criar instância')
+    },
+    beforeMount() {
+        console.log('antes de criar template e jogar na DOM')
+    },
+    mounted() {
+        console.log('quando a DOM está montada')
+    },
+    beforeUpdate() {
+        console.log('antes de criar template e jogar na DOM')
+    },
+    updated() {
+        console.log('depois de criar template e atualizar na DOM')
+    },
+    beforeDestroy() {
+        console.log('Chamado uma única vez antes da instância ser destruida');
+    },
+    destroyed() {
+        console.log('Chamado uma única vez depois da instância ser destruida')
+    }
+})
+```
+</details>
+
+
+## 6. Referências
 
 Documentação Oficial - Introdução: https://br.vuejs.org/v2/guide/
 
@@ -191,3 +225,5 @@ Documentação Oficial - Interligações de Classe e Estilo: https://br.vuejs.or
 Documentação Oficial - Renderização Condicional: https://br.vuejs.org/v2/guide/conditional.html
 
 Documentação Oficial - Renderização de Listas: https://br.vuejs.org/v2/guide/list.html
+
+Documentação Oficial - Instância Vue: https://br.vuejs.org/v2/guide/instance.html

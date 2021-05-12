@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Meu VueJS</title>
+</head>
+
+<body>
+    <div id="app">
+        {{ nome }} {{ sobrenome }} {{ 100 / 2 }} {{ Math.pow(2, 3) }}
+    </div>
+
+
+    <script>
+        function MeuVue(params) {
+            this.$el = document.querySelector(params.el)
+            this.$data = params.data
+
+            for(let atr in this.$data) {
+                Object.defineProperty(this, atr, {
+                    get: () => {
+                        return this.$data[atr]
+                    },
+                    set: value => {
+                        this.$data[atr] = value
+                    }
+                })
+            }
+
+            const regex = /\{\{([\s\w)(,.+*/-]*)\}\}/g
+            this.$el.innerHTML = this.$el.innerHTML.replace(regex, (match, $1) => {
+                const value = this[$1.trim()]   // para encontrar valor da propriedade exemplo: 'nome'
+                return value ? value : eval($1) // ses no encontra propriedade tenta resolver valor que foi passado.
+            }) 
+        }
+
+        const vm = new MeuVue({
+            el: '#app',
+            data: {
+                nome: 'Guilherme',
+                sobrenome: 'Almeida'
+            }
+        })
+
+        console.log(vm.nome)
+        vm.nome = 'gui'
+        console.log(vm.nome)
+        console.log(vm)
+
+    </script>
+</body>
+
+</html>
