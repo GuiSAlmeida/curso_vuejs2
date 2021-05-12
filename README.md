@@ -147,7 +147,7 @@ watch: {
 ## 5 Ciclo de Vida  
 ![image](https://br.vuejs.org/images/lifecycle.png)  
 
-### 5.1 Métodos do Cilco de Vida
+### 5.1 Métodos do Ciclo de Vida
 
 #### `beforeCreate()`
 Chamado uma unica vez na criação da instância, antes de criar instância.  
