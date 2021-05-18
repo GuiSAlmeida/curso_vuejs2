@@ -209,8 +209,13 @@ new Vue({
 ```
 </details>
 
+## 6. Plugins
+Plugins oficiais do vue: @vue/cli-plugin-nomedoplugin  
+Exemplo: @vue/cli-plugin-babel
 
-## 6. Referências
+Plugins de terceiros: vue-cli-plugin-nomedoplugin
+Exemplo: vue-cli-plugin-electron-builder
+## 7. Referências
 
 Documentação Oficial - Introdução: https://br.vuejs.org/v2/guide/
 
@@ -227,3 +232,9 @@ Documentação Oficial - Renderização Condicional: https://br.vuejs.org/v2/gui
 Documentação Oficial - Renderização de Listas: https://br.vuejs.org/v2/guide/list.html
 
 Documentação Oficial - Instância Vue: https://br.vuejs.org/v2/guide/instance.html
+
+Documentação oficial - Arquivo ".vue": https://br.vuejs.org/v2/guide/single-file-components.html
+
+Documentação oficial - método `render()`: https://br.vuejs.org/v2/guide/render-function.html
+
+Vue CLI: https://cli.vuejs.org/
