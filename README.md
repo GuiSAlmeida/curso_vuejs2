@@ -233,8 +233,12 @@ Documentação Oficial - Renderização de Listas: https://br.vuejs.org/v2/guide
 
 Documentação Oficial - Instância Vue: https://br.vuejs.org/v2/guide/instance.html
 
-Documentação oficial - Arquivo ".vue": https://br.vuejs.org/v2/guide/single-file-components.html
+Documentação oficial - Arquivo `.vue`: https://br.vuejs.org/v2/guide/single-file-components.html
 
 Documentação oficial - método `render()`: https://br.vuejs.org/v2/guide/render-function.html
+
+Documentação oficial - componentes: https://br.vuejs.org/v2/guide/components.html
+
+Documentação oficial - registro de componentes: https://br.vuejs.org/v2/guide/components-registration.html
 
 Vue CLI: https://cli.vuejs.org/
