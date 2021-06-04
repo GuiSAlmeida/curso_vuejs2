@@ -172,6 +172,13 @@ Chamado uma única vez antes da instância ser destruida.
 #### `destroyed()`
 Chamado uma única vez depois da instância ser destruida. 
 
+### 5.2 Métodos do Ciclo de Vida Adicionais para componente vivo
+#### `activated()`
+Chamado quando o componente é criado pela primeira vez, ou reativado apos ter sido desativado. 
+
+#### `deactivated()`
+Chamado quando o componente é removido do contexto porém não é destruido(keep-alive) mantendo seu estado como se estivesse oculto e esperando para ser reativado. 
+
 <details>
 <summary>Exemplos</summary>  
 
@@ -209,13 +216,47 @@ new Vue({
 ```
 </details>
 
-## 6. Plugins
+
+## 6. Components
+#### `<slot/>`
+Recebe tudo que foi passado dentro da tag do compenente para seu escopo sem ser necessário uso de props por exemplo.
+Podem ser nomeados diversos elemento para serem identificados no componente.  
+
+```html
+<!-- Passando dados dentro do componente -->
+<Component>
+    <h1 slot="autor">{{ citacoes[indice].autor }}</h1>
+    <p slot="texto">{{ citacoes[indice].texto }}</p>
+    <h6 slot="fonte">{{ citacoes[indice].fonte }}</h6>
+</Component>
+
+<!-- Recebendo dados no componente -->
+<div class="citacao">
+    <slot name="autor"/>
+    <slot name="texto"/>
+    <slot name="fonte"/>
+</div>
+```
+
+#### `<keep-alive/>`
+Evita que no recarregamento de página ou na troca do componente, ele não seja destroido e criado novamente mantendo estado atual quando componente for acessado novamente.
+> Podem ser escutados nos métodos do ciclo de vida:
+> `activated(), deactivated()`
+
+```html
+<keep-alive>
+    <component :is="componente"/>
+</keep-alive>
+
+
+```
+## 7. Plugins
 Plugins oficiais do vue: @vue/cli-plugin-nomedoplugin  
 Exemplo: @vue/cli-plugin-babel
 
 Plugins de terceiros: vue-cli-plugin-nomedoplugin
 Exemplo: vue-cli-plugin-electron-builder
-## 7. Referências
+## 8. Referências
 
 Documentação Oficial - Introdução: https://br.vuejs.org/v2/guide/
 
@@ -240,5 +281,13 @@ Documentação oficial - método `render()`: https://br.vuejs.org/v2/guide/rende
 Documentação oficial - componentes: https://br.vuejs.org/v2/guide/components.html
 
 Documentação oficial - registro de componentes: https://br.vuejs.org/v2/guide/components-registration.html
+
+Documentação Oficial - Props: https://br.vuejs.org/v2/guide/components.html#Passando-Dados-aos-Filhos-com-Props
+
+Documentação Oficial - Eventos Personalizados: https://br.vuejs.org/v2/guide/components.html#Enviando-Mensagens-ao-Pai-com-Eventos
+
+Documentação Oficial - Slots: https://br.vuejs.org/v2/guide/components.html#Distribuicao-de-Conteudo-com-Slots
+
+Documentação Oficial - Componentes Dinâmicos: https://br.vuejs.org/v2/guide/components.html#Componentes-Dinamicos
 
 Vue CLI: https://cli.vuejs.org/

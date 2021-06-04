@@ -16,9 +16,8 @@ export default {
   },
   methods: {
     alterarIdade() {
-      this.idade = 33;
-      eventBus.$emit("mudouIdade", this.idade);
-      // this.$emit('mudouIdade', 33)
+      this.idade += 1;
+      eventBus.alterarIdade(this.idade);
     },
   },
 };

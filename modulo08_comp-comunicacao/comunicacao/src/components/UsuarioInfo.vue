@@ -38,7 +38,7 @@ export default {
     }
   },
   created() {
-    eventBus.$on('mudouIdade', idade => {
+    eventBus.quandoIdadeMudar(idade => {
       this.idade = idade;
     })
   }
