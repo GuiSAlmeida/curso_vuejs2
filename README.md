@@ -1,36 +1,26 @@
 # Curso Vue
 
-## 1 Diretivas
+## 1. Diretivas
 São propriedades passadas dentro das tags **html**
 
-#### v-bind
+**v-bind**  
 Usado antes de propriedades para acessar valores dentro da instancia do vue e fazer ligação para atributo da tag.
 ```html
 <a v-bind:href="link">Google</a>
 ```
-
-#### v-model
-Faz a ligação entre view e o template sincronizados, **two-way data binding**.
-```html
-<input 
-    type="text" 
-    v-model="titulo"
->
-```
-
-#### v-once
+**v-once**  
 Usado para acessar valores dentro da instancia do vue uma **única vez**, se o valor for atualizado ele não será alterado.
 ```html
 <p v-once>{{ titulo }}</p>
 ```
 
-#### v-html
+**v-html**  
 Usado para exibir código Html, caso passado nas chaves duplas interpretam os dados como **texto simples**.
 ```html
 linkHtml = '<a href="http://google.com">Google</a>'
 <p v-html="linkHtml"></p>
 ```
-#### ref
+**ref**  
 Cria uma referência para elemento da DOM.
 ```html
 <h1 ref="aulaRef">{{ aula }}</h1>
@@ -39,18 +29,44 @@ this.$refs.aulaRef.style.color = "red"
 </script>
 ```
 
-### 1.1 Eventos
+**v-model**  
+Faz a ligação entre view e o template sincronizados, **two-way data binding**.
+```html
+<input type="text" v-model="titulo">
+```
 
-#### v-on:evento
+**v-on**  
 Usado para ficar escutando evento.
 ```html
 <button v-on:click="somar">+1</button>
 ```
 
-### 1.1.1 Modificadores de Eventos
+### 1.1. Modificadores  
 
-#### stop  
-**StopPropagation** usado diretamente na diretiva, para parar propagação do evento.  
+#### 1.1.1. Modificadores de input (v-model)
+Modificadores que devem ser passados junto a diretiva `v-model` para tratar os dados de entrada do campo input.
+
+**lazy**  
+Aplica valor digitado apenas depois que o foco sair do campo de entrada.
+```html
+<input type="text" v-model.lazy="usuario.email">
+```
+**trim**  
+Remove espaço no inicio e no final do valor digitado no campo de entrada.
+```html
+<input type="text" v-model.trim="usuario.email">
+```
+**number**  
+Retorna valor digitado no campo de entrada como valor numérico e não mais string como é por padrão.
+```html
+<input type="number" v-model.number="usuario.idade">
+```
+
+#### 1.1.2. Modificadores de Eventos  
+Modificadores que devem ser passados junto a diretiva `v-on` para controlar os comportamentos dos eventos.  
+
+**stop (StopPropagation)**  
+Usado diretamente na diretiva, para parar propagação do evento.  
 
 ```html
 <p v-on:mousemove="mostraCoordenadas">
@@ -59,12 +75,12 @@ Usado para ficar escutando evento.
 </p>
 ```
 
-#### prevent
-**PreventDefault** usado diretamente na diretiva, para prevenir comportamento padrão do browser.
+**prevent (PreventDefault)**  
+Usado diretamente na diretiva, para prevenir comportamento padrão do browser.
 ```html
 <a v-on:click.prevent href="http://guisalmeida.com">Acesse o site</a>
 ```
-#### teclas(keys) 
+**key (teclas)**  
 Usadas para emitir um evento especifico.
 ```html
 <input v-on:keyup="exibirAlerta" type="text">
@@ -75,8 +91,8 @@ Usadas para emitir um evento especifico.
 <!-- Chama função apenas quando enter+alt forem pressionadas -->
 ```
 
-### 1.2 Condicionais  
-#### v-if=condicional
+### 1.2. Condicionais  
+**v-if**  
 Usado para criar uma lógica condicional no template html.  
 
 > Exclui elemento da DOM.
@@ -85,7 +101,7 @@ Usado para criar uma lógica condicional no template html.
 <p v-else-if="anonimo">Usuário Anônimo</p>
 <p v-else>Nenhum Usuário Logado</p>
 ```
-#### v-show=condicional
+**v-show**  
 Usado para mostrar ou ocultar elemento no template html.  
 
 > Não exclui elemento da DOM, aplica display: none.
@@ -93,8 +109,8 @@ Usado para mostrar ou ocultar elemento no template html.
 <footer v-show="logado">Desenvolvido para vocẽ</footer>
 ```
 
-### 1.3 Listas  
-#### v-for=(valor, indice) in array/object
+### 1.3. Listas  
+**v-for**  
 Cria um laço de repetição for no elemento.  
 
 > Exclui elemento da DOM.
@@ -113,10 +129,10 @@ Cria um laço de repetição for no elemento.
 </ul>
 ```
 
-## 2 Methods (métodos)
+## 2. Methods (métodos)
 Funções de cada componente.
-#### $event
 
+**$event**  
 > Por padrão ao chamarmos uma função sem passar nenhum paramêtro,
 > o evento é passado automaticamente. Caso necessitamos passar um parâmetro
 > e o evento, devemos usar a palavra reservada `$event`.
@@ -124,60 +140,62 @@ Funções de cada componente.
 <button v-on:click="somar(5, $event)">+1</button>
 ```
 
-## 3 Computed (computados)
+## 3. Computed (computados)
 Funções sincronas.
 
-## 4 Watch
-Funções assincronas.
-
-<details>
-<summary>Sintaxe</summary>  
+## 4. Watch
+Funções assincronas que ficam monitorando alterações na propriedade.
 
 > Precisam ter o mesmo nome que a propriedade que vai ser alterada.
 
 ```js
 watch: {
-    propriedade(valornovo, valorantigo) {
+    propriedade(<valornovo>, <valorantigo>) {
         // faça algo
     }
 },
 ```
-</details>
 
-## 5 Ciclo de Vida  
+Para monitorar o **estado interno** de cada um dos elementos da propriedade que está sendo monitorada, deve-se alterar o método com nome da propriedade para um objeto com um atributo chamado `deep: true` e o método que deve ser executado é passado no atributo `handler`.
+
+```js
+watch: {
+    propriedade: {
+      deep: true,
+      handler() {
+        // faça algo
+      }
+    }
+  },
+```
+
+## 5. Ciclo de Vida  
 ![image](https://br.vuejs.org/images/lifecycle.png)  
 
-### 5.1 Métodos do Ciclo de Vida
+### 5.1. Métodos do Ciclo de Vida
 
-#### `beforeCreate()`
+**beforeCreate**  
 Chamado uma unica vez na criação da instância, antes de criar instância.  
-#### `created()`
+**created**  
 Chamado uma unica vez na criação da instância, depois de criar instância. 
 
-#### `beforeMount()`
+**beforeMount**  
 Chamado uma unica vez na criação da instância, antes de criar template e jogar na DOM. 
 
-#### `mounted()`
+**mounted**  
 Chamado uma unica vez na criação da instância, quando a DOM está montada. 
 
-#### `beforeUpdate()`
+**beforeUpdate**  
 Chamado sempre que houver uma mudança para ser aplicada na DOM, antes de criar template e jogar na DOM. 
 
-#### `updated()`
+**updated**  
 Chamado sempre que houver uma mudança para ser aplicada na DOM, depois de criar template e atualizar na DOM. 
 
-#### `beforeDestroy()`
+**beforeDestroy**  
 Chamado uma única vez antes da instância ser destruida. 
 
-#### `destroyed()`
+**destroyed**  
 Chamado uma única vez depois da instância ser destruida. 
-
-### 5.2 Métodos do Ciclo de Vida Adicionais para componente vivo
-#### `activated()`
-Chamado quando o componente é criado pela primeira vez, ou reativado apos ter sido desativado. 
-
-#### `deactivated()`
-Chamado quando o componente é removido do contexto porém não é destruido(keep-alive) mantendo seu estado como se estivesse oculto e esperando para ser reativado. 
 
 <details>
 <summary>Exemplos</summary>  
@@ -216,9 +234,15 @@ new Vue({
 ```
 </details>
 
+### 5.2. Métodos do Ciclo de Vida Adicionais para Componente Vivo
+**activated**  
+Chamado quando o componente é criado pela primeira vez, ou reativado apos ter sido desativado. 
+
+**deactivated**  
+Chamado quando o componente é removido do contexto porém não é destruido(keep-alive) mantendo seu estado como se estivesse oculto e esperando para ser reativado. 
 
 ## 6. Components
-#### `<slot/>`
+**slot**  
 Recebe tudo que foi passado dentro da tag do compenente para seu escopo sem ser necessário uso de props por exemplo.
 Podem ser nomeados diversos elemento para serem identificados no componente.  
 
@@ -238,7 +262,7 @@ Podem ser nomeados diversos elemento para serem identificados no componente.
 </div>
 ```
 
-#### `<keep-alive/>`
+**keep-alive**  
 Evita que no recarregamento de página ou na troca do componente, ele não seja destroido e criado novamente mantendo estado atual quando componente for acessado novamente.
 > Podem ser escutados nos métodos do ciclo de vida:
 > `activated(), deactivated()`
