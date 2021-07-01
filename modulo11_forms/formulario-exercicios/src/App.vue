@@ -2,7 +2,7 @@
 	<div id="app">
 		<h1>Registrar Reclamação</h1>
 		<div class="conteudo">
-			<form class="painel">
+			<form class="painel" v-if="!enviado">
 				<div class="cabecalho">Formulário</div>
 				<Rotulo nome="E-mail">
 					<input type="text" v-model.lazy="usuario.email">
@@ -14,29 +14,55 @@
 					<input type="number" v-model.number="usuario.idade">
 				</Rotulo>
 				<Rotulo nome="Mensagem">
-					<textarea name="" cols="30" rows="5"></textarea>
+					<textarea name="" cols="30" rows="5" v-model="mensagem"></textarea>
 				</Rotulo>
 				<Rotulo nome="Características do Problema">
-					<span class="mr-4"><input type="checkbox" value="reproduzivel"> Reproduzível</span>
-					<span><input type="checkbox" value="intermitente"> Intermitente</span>
+					<span class="mr-4">
+						<input 
+							type="checkbox" 
+							value="reproduzivel"
+							v-model="caracteristicas"
+							> Reproduzível
+					</span>
+
+					<span>
+						<input 
+							type="checkbox" 
+							value="intermitente"
+							v-model="caracteristicas"
+							> Intermitente
+					</span>
 				</Rotulo>
 				<Rotulo nome="Qual produto?">
-					<span class="mr-4"><input type="radio"> Web</span>
-					<span class="mr-4"><input type="radio"> Mobile</span>
-					<span><input type="radio"> Outro</span>
+					<span class="mr-4">
+						<input type="radio" value="web" v-model="produto"> Web
+					</span>
+					<span class="mr-4">
+						<input type="radio" value="mobile" v-model="produto"> Mobile
+					</span>
+					<span>
+						<input type="radio" value="outro" v-model="produto"> Outro
+					</span>
 				</Rotulo>
 				<Rotulo nome="Prioridade">
-					<select name="" id="">
-						<option></option>
+					<select v-model="prioridade">
+						<option 
+							v-for="prioridade in prioridades"
+							:value="prioridade.nome"
+							:key="prioridade.codigo"
+						>
+							{{prioridade.nome}}
+						</option>
 					</select>
 				</Rotulo>
 				<Rotulo nome="Primeira Reclamação?">
-					<Escolha />
+					<Escolha v-model="escolha"/>
 				</Rotulo>
 				<hr>
-				<button>Enviar</button>
+				<button @click.prevent="enviar">Enviar</button>
 			</form>
-			<div class="painel">
+
+			<div class="painel" v-else>
 				<div class="cabecalho">Resultado</div>
 				<Rotulo nome="E-mail">
 					<span>{{usuario.email}}</span>
@@ -48,19 +74,23 @@
 					<span>{{usuario.idade}}</span>
 				</Rotulo>
 				<Rotulo nome="Mensagem">
-					<span>???</span>
+					<span style="white-space: pre">{{mensagem}}</span>
 				</Rotulo>
 				<Rotulo nome="Marque as Opções">
-					<span>???</span>
+					<span>
+						<ul>
+							<li v-for="car in caracteristicas" :key="car">{{car}}</li>
+						</ul>
+					</span>
 				</Rotulo>
 				<Rotulo nome="Qual produto?">
-					<span>???</span>
+					<span>{{produto}}</span>
 				</Rotulo>
 				<Rotulo nome="Prioridade">
-					<span>???</span>
+					<span>{{ prioridade }}</span>
 				</Rotulo>
 				<Rotulo nome="Primeira Reclamação?">
-					<span>???</span>
+					<span>{{escolha}}</span>
 				</Rotulo>
 			</div>
 		</div>
@@ -76,18 +106,33 @@ export default {
 	components: { Rotulo, Escolha },
 	data() {
 		return {
+			mensagem: '',
+			caracteristicas: [],
+			produto: 'web',
+			prioridade: 'Baixa',
+			prioridades: [
+				{codigo: 1, nome: 'Baixa'},
+				{codigo: 2, nome: 'Moderada'},
+				{codigo: 3, nome: 'Alta'},
+			],
 			usuario: {
 				email: '',
 				senha: '',
 				idade: 34
-			}
+			},
+			escolha: true,
+			enviado: false
+		}
+	},
+	methods: {
+		enviar() {
+			this.enviado = true
 		}
 	}
 }
 </script>
 
 <style>
-
 body {
 	background-color: #ECECEC;
 }

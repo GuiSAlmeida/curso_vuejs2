@@ -1,7 +1,10 @@
 # Curso Vue
 
 ## 1. Diretivas
-São propriedades passadas dentro das tags **html**
+São propriedades passadas dentro das tags **html**, funcionam da seguinte forma:
+```html
+<tag v-diretiva:argumento.modificador="'valor'" />
+```
 
 **v-bind**  
 Usado antes de propriedades para acessar valores dentro da instancia do vue e fazer ligação para atributo da tag.
@@ -14,12 +17,19 @@ Usado para acessar valores dentro da instancia do vue uma **única vez**, se o v
 <p v-once>{{ titulo }}</p>
 ```
 
+**v-text**  
+Usado para inserir text em uma tag.
+```html
+<p v-text="'Usando diretiva v-text'"></p>
+```
+
 **v-html**  
 Usado para exibir código Html, caso passado nas chaves duplas interpretam os dados como **texto simples**.
 ```html
 linkHtml = '<a href="http://google.com">Google</a>'
 <p v-html="linkHtml"></p>
 ```
+
 **ref**  
 Cria uma referência para elemento da DOM.
 ```html
@@ -129,6 +139,62 @@ Cria um laço de repetição for no elemento.
 </ul>
 ```
 
+### 1.4. Diretivas personalizadas
+Vue permite registrar suas próprias diretivas personalizadas. Note que no Vue 2.0, a forma primária de abstração e reuso de código são componentes - no entanto, pode haver casos em que você só precisa de um acesso de baixo nível ao DOM em elementos simples, e aí diretivas personalizadas seriam úteis.
+Para isso podem ser usados alguns hooks com argumentos:  
+
+![hooks](modulo12_diretivas/diretivas-exercicios/src/assets/images/hooks-diretivas.png)
+
+#### 1.4.1. Diretiva global
+**Exemplo**  
+
+No arquivo `main.js`:
+```js
+Vue.directive('destaque', {
+	bind(el, binding) {
+		let delay = 0
+		if(binding.modifiers['delay']) delay = 2000
+
+		setTimeout(() => {
+			if(!binding.arg) {
+				el.style.color = binding.value
+				return
+			}
+			el.style.backgroundColor = binding.value
+		}, delay);
+	}
+})
+```
+No componente:
+```html
+<template>
+    <p v-destaque:background.delay="'lightgreen'">Usando diretiva personalizada</p>
+    <p v-destaque.delay="'yellow'">Usando diretiva personalizada</p>
+</template>
+```
+
+#### 1.4.2. Diretiva local
+**Exemplo**  
+No componente:
+```html
+<template>
+    <p v-destaque="valor">Usando diretiva local personalizada</p>
+</template>
+
+<script>
+    export default {
+        directives: {
+            "diretiva-local": {
+                bind(el, binding) {
+                    // faça algo
+                }
+            }
+        },
+    }
+<script/>
+```
+
+---
 ## 2. Methods (métodos)
 Funções de cada componente.
 
@@ -139,10 +205,11 @@ Funções de cada componente.
 ```html
 <button v-on:click="somar(5, $event)">+1</button>
 ```
-
+---
 ## 3. Computed (computados)
-Funções sincronas.
+Funções sincronas.  
 
+---
 ## 4. Watch
 Funções assincronas que ficam monitorando alterações na propriedade.
 
@@ -168,6 +235,8 @@ watch: {
     }
   },
 ```
+
+---
 
 ## 5. Ciclo de Vida  
 ![image](https://br.vuejs.org/images/lifecycle.png)  
@@ -241,6 +310,7 @@ Chamado quando o componente é criado pela primeira vez, ou reativado apos ter s
 **deactivated**  
 Chamado quando o componente é removido do contexto porém não é destruido(keep-alive) mantendo seu estado como se estivesse oculto e esperando para ser reativado. 
 
+---
 ## 6. Components
 **slot**  
 Recebe tudo que foi passado dentro da tag do compenente para seu escopo sem ser necessário uso de props por exemplo.
@@ -272,15 +342,88 @@ Evita que no recarregamento de página ou na troca do componente, ele não seja 
     <component :is="componente"/>
 </keep-alive>
 
-
 ```
-## 7. Plugins
+---
+## 7. Filters (Filtros)
+Métodos que podem ser criados dentro do atributo `filters` onde fazem um tratativa em um determinado dado. A **sintaxe** funciona com um **pipe (|)** antes e depois o filtro. São suportados dentro de **interpolações** e no contexto de valores do **v-bind**.
+
+**Exemplo filtro local:**
+```html
+<template>
+	<div id="app">
+		<p>{{ cpf | cpfFormat }}</p>
+        <input type="text" :value="cpf | cpfFormat">
+	</div>
+</template>
+
+<script>
+export default {
+	filters: {
+		cpfFormat(valor){
+			const arr = valor.split('')
+			arr.splice(3, 0, '.')
+			arr.splice(7, 0, '.')
+			arr.splice(11, 0, '-')
+			return arr.join('')
+		}
+	},
+	data() {
+		return {
+			cpf: '01234567891'
+		}
+	}
+}
+</script>
+```
+
+**Exemplo filtro global:**
+No arquivo `main.js`:  
+```js
+Vue.filter('inverter', (valor) => {
+	return valor.split('').reverse().join('')
+})
+```
+No componente:  
+
+```html
+<template>
+	<div id="app">
+		<p>{{ cpf | inverter }}</p>
+        <input type="text" :value="cpf | inverter">
+	</div>
+</template>
+
+<script>
+export default {
+	data() {
+		return {
+			cpf: '01234567891'
+		}
+	}
+}
+</script>
+```
+
+> Filtros podem ser encadeados recebendo o valor retornado do filtro anterior:
+> ```html
+> <template>
+> 	<div id="app">
+> 		<p>{{ cpf | inverter | cpfFormat }}</p>
+>       <input type="text" :value="cpf | inverter | cpfFormat">
+> 	</div>
+> </template>
+> ```
+
+---
+## 8. Plugins
 Plugins oficiais do vue: @vue/cli-plugin-nomedoplugin  
 Exemplo: @vue/cli-plugin-babel
 
 Plugins de terceiros: vue-cli-plugin-nomedoplugin
 Exemplo: vue-cli-plugin-electron-builder
-## 8. Referências
+
+---
+## 9. Referências
 
 Documentação Oficial - Introdução: https://br.vuejs.org/v2/guide/
 
@@ -313,5 +456,9 @@ Documentação Oficial - Eventos Personalizados: https://br.vuejs.org/v2/guide/c
 Documentação Oficial - Slots: https://br.vuejs.org/v2/guide/components.html#Distribuicao-de-Conteudo-com-Slots
 
 Documentação Oficial - Componentes Dinâmicos: https://br.vuejs.org/v2/guide/components.html#Componentes-Dinamicos
+
+Documentação Oficial - Formulário: https://br.vuejs.org/v2/guide/forms.html
+
+Documentação Oficial - Diretivas Personalizadas: https://br.vuejs.org/v2/guide/custom-directive.html
 
 Vue CLI: https://cli.vuejs.org/
