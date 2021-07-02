@@ -2,13 +2,34 @@
 	<div id="app">
 		<h1>Filtros & Mixins</h1>
 		<hr>
+		<h3>{{usuarioLogado}}</h3>
 		<p>{{ cpf | inverter | cpfFormat }}</p>
 		<input type="text" :value="cpf | inverter | cpfFormat">
+		<hr>
+		<Frutas/>
+		<hr>
+		<div>
+			<ul>
+				<li v-for="fruta in frutas" :key="fruta">{{fruta}}</li>
+			</ul>
+			<input type="text" v-model="fruta" @keydown.enter="add">
+		</div>
 	</div>
 </template>
 
 <script>
+import Frutas from './Frutas.vue'
+import frutasMixin from './frutasMixin'
+import usuarioLogado from '@/usuarioMixin'
+
 export default {
+	components: {
+		Frutas
+	},
+	mixins: [
+		frutasMixin,
+		usuarioLogado
+	],
 	filters: {
 		cpfFormat(valor){
 			const arr = valor.split('')
@@ -22,7 +43,11 @@ export default {
 		return {
 			cpf: '01234567891'
 		}
-	}
+	},
+    created() {
+        // eslint-disable-next-line no-console
+        console.log('Created app.vue')
+    }
 }
 </script>
 

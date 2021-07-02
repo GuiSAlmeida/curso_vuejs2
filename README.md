@@ -415,7 +415,51 @@ export default {
 > ```
 
 ---
-## 8. Plugins
+## 8. Mixins
+Mixins são uma forma flexível de distribuir funcionalidade reutilizável em diversos componentes Vue. Um objeto mixin pode conter quaisquer opções de componente. Quando um componente utiliza um mixin, todas as opções deste serão misturadas (em inglês, mixed in) com as opções do próprio componente.  
+`frutasMixin.js`
+```js
+export default {
+    data() {
+        return {
+            fruta: '',
+            frutas: ['banana', 'maçã', 'laranja']
+        }
+    },
+    methods: {
+        add() {
+            this.frutas.push(this.fruta)
+            this.fruta = ''
+        }
+    },
+}
+```
+O componente vai receber tudo que foi declarado no mixin e mesclar com seus próprios parâmetros quando for criado sua instância.  
+
+`component.vue`
+```html
+<script>
+import frutasMixin from '@/frutasMixin'
+
+export default {
+    mixins: [
+        frutasMixin
+    ]
+}
+<script/>
+```
+
+**Mixin global**
+```js
+Vue.mixin({
+    created() {
+        console.log('Created GLOBAL mixin')
+    }
+})
+```
+
+---
+## 9. Plugins
 Plugins oficiais do vue: @vue/cli-plugin-nomedoplugin  
 Exemplo: @vue/cli-plugin-babel
 
@@ -423,7 +467,7 @@ Plugins de terceiros: vue-cli-plugin-nomedoplugin
 Exemplo: vue-cli-plugin-electron-builder
 
 ---
-## 9. Referências
+## 10. Referências
 
 Documentação Oficial - Introdução: https://br.vuejs.org/v2/guide/
 
