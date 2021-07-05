@@ -207,7 +207,31 @@ Funções de cada componente.
 ```
 ---
 ## 3. Computed (computados)
-Funções sincronas.  
+Expressões dentro de templates são muito convenientes, mas são destinadas a operações simples. Colocar muita lógica neles pode fazer com que o seu código fique verboso e que a sua manutenção fique mais complicada. Por isso que, para qualquer lógica mais complexa, usamos **dados computados**.
+
+```html
+<template>
+    <div id="example">
+        <p>Mensagem original: "{{ message }}"</p>
+        <p>Mensagem ao contrário: "{{ reversedMessage }}"</p>
+    </div>
+</template>
+
+<script>
+    export default {
+        data() {
+            return {
+                message: 'Olá Vue'
+            }
+        },
+        computed: {
+            reversedMessage: function () {
+                return this.message.split('').reverse().join('')
+            }
+        }
+    }
+</script>
+```
 
 ---
 ## 4. Watch
@@ -504,5 +528,9 @@ Documentação Oficial - Componentes Dinâmicos: https://br.vuejs.org/v2/guide/c
 Documentação Oficial - Formulário: https://br.vuejs.org/v2/guide/forms.html
 
 Documentação Oficial - Diretivas Personalizadas: https://br.vuejs.org/v2/guide/custom-directive.html
+
+Documentação Oficial - Filtros: https://br.vuejs.org/v2/guide/filters.html
+
+Documentação Oficial - Mixins: https://br.vuejs.org/v2/guide/mixins.html
 
 Vue CLI: https://cli.vuejs.org/
