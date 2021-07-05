@@ -485,10 +485,10 @@ Vue.mixin({
 ---
 ## 9. Plugins
 Plugins oficiais do vue: @vue/cli-plugin-nomedoplugin  
-Exemplo: @vue/cli-plugin-babel
+Ex.: @vue/cli-plugin-babel
 
-Plugins de terceiros: vue-cli-plugin-nomedoplugin
-Exemplo: vue-cli-plugin-electron-builder
+Plugins de terceiros: vue-cli-plugin-nomedoplugin  
+Ex.: vue-cli-plugin-electron-builder
 
 ---
 ## 10. Referências
