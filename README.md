@@ -483,15 +483,53 @@ Vue.mixin({
 ```
 
 ---
-## 9. Plugins
-Plugins oficiais do vue: @vue/cli-plugin-nomedoplugin  
-Exemplo: @vue/cli-plugin-babel
+## 9. Animações
+Vue disponibiliza um componente encapsulador (wrapper) chamado `transition`, permitindo que você adicione transição de entrada/saída para qualquer elemento ou componente dentro do seguinte contexto:
 
-Plugins de terceiros: vue-cli-plugin-nomedoplugin
-Exemplo: vue-cli-plugin-electron-builder
+- Renderização condicional (usando `v-if`)
+- Exibição condicional (usando `v-show`)
+- Componentes dinâmicos
+- Componentes de nós de raiz
+
+**Appear** - atributo usado no componente `transition` para o efeito aplicado também funcionar quando o componente é criado na dom.
+
+### 9.1. Transições classes
+A partir do atributo `name` passado no componente são criados estilos de acordo com estado.  
+
+![transition](https://user-images.githubusercontent.com/45276342/124758002-8938db00-df04-11eb-991b-b8dc74d2c73e.png)
+
+```js
+<template>
+    <transition name="fade" appear>
+        <elemento/>
+    </transition>
+</template>
+
+<style>
+.fade-enter {}
+
+.fade-enter-active {}
+
+.fade-enter-to {}
+
+.fade-leave {}
+
+.fade-leave-active {}
+
+.fade-leave-to {}
+</style>
+```
 
 ---
-## 10. Referências
+## 10. Plugins
+Plugins oficiais do vue: @vue/cli-plugin-nomedoplugin  
+**Ex.:** @vue/cli-plugin-babel
+
+Plugins de terceiros: vue-cli-plugin-nomedoplugin
+**Ex.:** vue-cli-plugin-electron-builder
+
+---
+## 11. Referências
 
 Documentação Oficial - Introdução: https://br.vuejs.org/v2/guide/
 
