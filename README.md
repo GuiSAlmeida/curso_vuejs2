@@ -519,6 +519,100 @@ A partir do atributo `name` passado no componente são criados estilos de acordo
 .fade-leave-to {}
 </style>
 ```
+#### 9.1.1. Personalizando Classes
+Também é possível especificar uma classe de transição personalizada fornecendo os seguintes atributos:
+- enter-class
+- enter-active-class
+- enter-to-class (2.1.8+)
+- leave-class
+- leave-active-class
+- leave-to-class (2.1.8+)
+
+```html
+<transition
+    enter-active-class="animated bounce"
+    leave-active-class="animated shake"
+>
+      <elemento/>
+</transition>
+```
+
+#### 9.1.2. Transições Dinâmicas
+É popssivel passar nome para o elemento `transition` via binding e também ter trocas de elementos dentro da transição atráves do `v-if`. Para isso é necessário que cada elemento possua uma chave única (key) e também deve ser passado a diretiva `mode` na transition para um elemento não sobrepor o outro.
+
+```html
+<transition :name="animacao" mode="out-in">
+    <b-alert variant="info" show v-if="exibir" key="info">{{ msg }}</b-alert>
+    <b-alert variant="warning" show v-else key="warning">{{ msg }}</b-alert>
+</transition>
+
+<!-- Também pode ser usado com componentes dinâmicos -->
+<transition name="animacao" mode="out-in">
+    <component :is="componenteSelecionado"></component>
+</transition>
+```
+
+### 9.2. Transition com Hooks JS
+![hooks](https://user-images.githubusercontent.com/45276342/125286025-af3df100-e2f1-11eb-9e66-59ff7d4c438f.png)
+
+```html
+<template>
+    <button @click="exibir2 = !exibir2">Mostrar</button>
+    <transition
+      :css="false"
+      @before-enter="beforeEnter"
+      @enter="enter"
+      @after-enter="afterEnter"
+      @enter-cancelled="enterCancelled"
+
+      @before-leave="beforeLeave"
+      @leave="Leave"
+      @after-leave="afterLeave"
+      @leave-cancelled="leaveCancelled"
+    >
+      <div v-if="exibir2" class="caixa"></div>
+    </transition>
+</template>
+
+<script>
+    export default {
+    data() {
+        return {
+            exibir2: true,
+        };
+    },
+    methods: {
+        beforeEnter(el) {
+            console.log('beforeEnter');
+        },
+        enter(el, done) {
+            console.log('enter');
+            done()
+        },
+        afterEnter(el) {
+            console.log('afterEnter');
+        },
+        enterCancelled() {
+            console.log('enterCancelled');
+        },
+        beforeLeave(el) {
+            console.log('beforeLeave');
+        },
+        leave(el, done) {
+            console.log('leave');
+            done()
+        },
+        afterLeave(el) {
+            console.log('afterLeave');
+        },
+        leaveCancelled() {
+            console.log('leaveCancelled');
+        }
+    }
+};
+</script>
+```
+
 
 ---
 ## 10. Plugins
