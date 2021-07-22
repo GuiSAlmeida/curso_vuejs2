@@ -612,18 +612,329 @@ Também é possível especificar uma classe de transição personalizada fornece
 };
 </script>
 ```
+---
+## 10 Vue-Router
+```sh
+npm install vue-router
+```
+
+### 10.1. Configuração
+
+`/src/router.js`
+```js
+import Vue from 'vue'
+import Router from 'vue-router'
+import Component from './components/component'
+
+Vue.use(Router)
+
+export default new Router({
+    routes: [
+        {
+            path: '/',
+            component: Component
+        }
+    ]
+})
+```
+`/src/main.js`
+```js
+import Vue from 'vue'
+import App from './App.vue'
+import router from './router'
+
+new Vue({
+  router, // router: router,
+  render: h => h(App),
+}).$mount('#app')
+```
+
+### 10.2. Modos navegação
+**Modo Hash**  
+Modo default da aplicação.  
+Na url: `localhost:8080/#/pagina`  
+Na request: `localhost:8080/`
+
+**Modo History**  
+Na url: `localhost:8080/pagina`  
+Na request: `localhost:8080/pagina`  
+
+```js
+export default new Router({
+    mode: 'history',
+    routes: [
+        {
+            path: '/',
+            component: Component
+        }
+    ]
+})
+```
+
+### 10.3. Componentes globais
+**Router-Link**  
+Usado para navegação, a rota é especificada na prop `to`.  
+Será renderizado uma tag `<a>` por default.  
+Para alterar a tag renderizada passa a prop `tag`.
+Também é possivel passar prop para quando rota estiver ativa e aplicar uma classe, 
+e também usar o `exact` para dar match exato com path passado.
+```html
+<template>
+    <router-link 
+        to="/"
+        tag="div"
+        active-class="active"
+        exact
+    >Link</router-link>
+</template>
+```
+
+**Router-View**  
+Resultado da rota atual, irá renderizar o **componente** correspondente a **rota**.
+```html
+<template>
+    <router-view />
+</template>
+```
+
+### 10.4. Rotas Dinâmicas
+Passando `props` na rota, o componente referenciado receberá esses dados passados no path como props. Sendo necessário sua declaração dentro do componente também.
+
+```js
+// no router
+export default new Router({
+    mode: 'history',
+    routes: [
+        {
+            path: '/',
+            component: Init
+        },
+        {
+            path: '/user/:id',
+            component: User,
+            props: true
+        }
+    ]
+})
+
+// no componente
+export default {
+    props: ['id'],
+}
+```
+
+### 10.5. Rotas Aninhadas
+Para renderizar componentes aninhados, precisamos usar a opção `children` na configuração do **construtor** `VueRouter`.  
+
+> Os `paths` das rotas aninhadas seguirão a partir do `path` da rota principal.
+
+```js
+export default new Router({
+    mode: 'history',
+    routes: [
+        {
+            path: '/users',
+            component: User,
+            children: [
+                { path: '', component: UserList }, // path = '/users'
+                { path: ':id', component: UserDetail, props: true }, // path = '/users/:id'
+                { path: ':id/edit', component: UserEdit, props: true }, // path = '/users/:id/edit'
+            ]
+        }
+    ]
+})
+```
+
+### 10.6. Nomeando Rotas
+As rotas podem ser nomeadas facilitando sua identificação e a compreensão do código.  
+
+```js
+export default new Router({
+    mode: 'history',
+    routes: [
+        {
+            path: '/',
+            name: 'home',
+            component: Init
+        }
+    ]
+})
+```
+No componente temos mais de uma maneira de chamar a rota.
+```html
+<template>
+    <div class="App">
+        <!-- Para chamar a rota por nome é passado dentro de um objeto -->
+        <router-link to="{ name: 'home' }">Voltar</router-link>
+
+        <!-- A rota também pode ser carregada por um método -->
+        <button v-on:click="toHome">Voltar</button>
+    </div>
+</template>
+
+<script>
+export default {
+    methods: {
+        toHome() {
+            // this.$router.push('/')
+            // this.$router.push({ path: '/' })
+            this.$router.push({ name: 'home' })
+        }
+    }
+}
+</script>
+```
+
+### 10.7. Rotas com múltiplos componentes
+Na configuração do **construtor** `VueRouter` passamos os componentes que devem ser renderizados ao carregar a rota.
+```js
+export default new Router({
+    mode: 'history',
+    routes: [{
+        path: '/',
+        name: 'home',
+        components: {
+            default: Home,
+            menu: Menu
+        }
+    }
+}
+```
+No template que vai usar o componente da rota pode ser passado mais de um `router-view` para renderizar mais de um componente de acordo com a rota. São diferenciados de acordo com nome passado no **Router**.
+```html
+<template>
+	<div id="app">
+		<router-view name="menu"/>
+		<router-view />
+	</div>
+</template>
+```
+
+### 10.8. Redirecionando rotas
+Para redirecionar uma rota passamos a opção `redirect` e no seu valor o caminho que deve ser redirecionado.  
+> Para pegar qualquer coisa que seja digitada e não seja igual nossas rotas passamos um `*` (asterisco).
+```js
+export default new Router({
+    mode: 'history',
+    routes: [
+        {
+            path: '*',
+            redirect: '/notfound'
+        }
+    ]
+}
+```
+
+### 10.9. ScroolBehavior
+Ao usar o roteamento do lado do cliente, podemos querer rolar para cima ao navegar para uma nova rota ou preservar a posição de rolagem das entradas do histórico da mesma forma que o recarregamento de página real faz. O `vue-router` permite que você consiga isso e, melhor ainda, permite que você personalize completamente o comportamento de rolagem na navegação da rota. Na configuração do **construtor** `VueRouter` podemos passar.
+```js
+export default new Router({
+    mode: 'history',
+    scrollBehavior(to, from, savedPosition) {
+        if(savedPosition) {
+            return savedPosition
+        } else if (to.hash) {
+            return { selector: to.hash, behavior: 'smooth' }
+        } else {
+            return { x: 0, y: 0, behavior: 'smooth' }
+        }
+    },
+    routes: [{
+        path: '/',
+        name: 'home',
+        component: Home
+    }]
+}
+```
+
+### 10.10. Interceptando Rotas
+```js
+/**
+ * Interceptando rotas globalmente, 
+ * antes de cada rota vai ser rodado o callback passado no beforeEach
+ * 
+ * to   = rota de origem
+ * from = rota de destino
+ * next = comando que encaminha para rota, 
+ *        sem passar ele não é finalizada a rota.
+ *        Pode ser passado uma rota especifica no next,
+ *        ou passar um false para ele não seguir.
+ * 
+ * Nesse passo não temos acesso ao this porque o componente ainda não foi montado.
+ */
+router.beforeEach((to,from, next) => {
+    // eslint-disable-next-line no-console
+    console.log('antes das rotas');
+    next();
+})
+
+// diretamente em uma rota
+const router = new Router({
+    mode: 'history',
+    routes: [{
+        path: '/',
+        name: 'home',
+        component: Home,
+        beforeEnter: (to, from, next) => {
+            console.log('antes da rota local');
+            next();
+        }
+    }
+}
+
+// no componente que vai ser chamado pela rota
+export default {
+    beforeRouteEnter(to, from, next) {
+        // eslint-disable-next-line no-console
+        console.log('antes rota usuario detalhe');
+        next();
+    },
+    // antes de sair da rota
+    beforeRouteLeave(to, from, next) {
+    if (this.confirm) {
+      next()
+    } else {
+      if(confirm('tem certeza?')) {
+        next()
+      } else {
+        next(false)
+      }
+    }
+  }
+}
+```
+
+### 10.11. Rotas Tardias
+Podemos configurar componentes que serão chamados nas rotas, 
+para serem carregados apenas quando forem chamados, 
+optimizando carregamento da página.  
+
+```js
+const Users = () => import('./components/user/Users')
+const UserList = () => import('./components/user/UserList')
+const UserDetail = () => import('./components/user/UserDetail')
+const UserEdit = () => import('./components/user/UserEdit')
+```
+
+Agrupando arquivos `JS` no mesmo bundle para serem carregados.
+```js
+const Users = () => import(/* webpackChunkName: 'user' */'./components/user/Users')
+const UserList = () => import(/* webpackChunkName: 'user' */'./components/user/UserList')
+const UserDetail = () => import(/* webpackChunkName: 'user' */'./components/user/UserDetail')
+const UserEdit = () => import(/* webpackChunkName: 'user' */'./components/user/UserEdit')
+```
 
 
 ---
-## 10. Plugins
+## 11. Plugins
 Plugins oficiais do vue: @vue/cli-plugin-nomedoplugin  
 **Ex.:** @vue/cli-plugin-babel
 
-Plugins de terceiros: vue-cli-plugin-nomedoplugin
+Plugins de terceiros: vue-cli-plugin-nomedoplugin  
 **Ex.:** vue-cli-plugin-electron-builder
 
 ---
-## 11. Referências
+## 12. Referências
 
 Documentação Oficial - Introdução: https://br.vuejs.org/v2/guide/
 
@@ -664,5 +975,7 @@ Documentação Oficial - Diretivas Personalizadas: https://br.vuejs.org/v2/guide
 Documentação Oficial - Filtros: https://br.vuejs.org/v2/guide/filters.html
 
 Documentação Oficial - Mixins: https://br.vuejs.org/v2/guide/mixins.html
+
+Vue Developer Tools: https://github.com/vuejs/vue-devtools
 
 Vue CLI: https://cli.vuejs.org/
