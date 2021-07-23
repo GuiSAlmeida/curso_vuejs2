@@ -734,7 +734,7 @@ export default new Router({
     routes: [
         {
             path: '/users',
-            component: User,
+            component: Users,
             children: [
                 { path: '', component: UserList }, // path = '/users'
                 { path: ':id', component: UserDetail, props: true }, // path = '/users/:id'
@@ -755,7 +755,7 @@ export default new Router({
         {
             path: '/',
             name: 'home',
-            component: Init
+            component: Home
         }
     ]
 })
@@ -804,8 +804,10 @@ No template que vai usar o componente da rota pode ser passado mais de um `route
 ```html
 <template>
 	<div id="app">
+        <!-- O router-view que não é passado o atributo "name" 
+        renderiza o componente passado no default no Router. -->
+		<router-view /> 
 		<router-view name="menu"/>
-		<router-view />
 	</div>
 </template>
 ```
@@ -826,7 +828,8 @@ export default new Router({
 ```
 
 ### 10.9. ScroolBehavior
-Ao usar o roteamento do lado do cliente, podemos querer rolar para cima ao navegar para uma nova rota ou preservar a posição de rolagem das entradas do histórico da mesma forma que o recarregamento de página real faz. O `vue-router` permite que você consiga isso e, melhor ainda, permite que você personalize completamente o comportamento de rolagem na navegação da rota. Na configuração do **construtor** `VueRouter` podemos passar.
+Ao usar o roteamento do lado do cliente, podemos querer rolar para cima ao navegar para uma nova rota ou preservar a posição de rolagem das entradas do histórico da mesma forma que o recarregamento de página real faz. O `vue-router` permite que você consiga isso e, melhor ainda, permite que você personalize completamente o comportamento de rolagem na navegação da rota. Na configuração do **construtor** `VueRouter` podemos passar.  
+
 ```js
 export default new Router({
     mode: 'history',
@@ -848,11 +851,10 @@ export default new Router({
 ```
 
 ### 10.10. Interceptando Rotas
+Interceptando rotas globalmente, antes de cada rota vai ser rodado o callback passado no `beforeEach`.  Nesse passo não temos acesso ao `this` porque o componente ainda não foi montado.
+
 ```js
 /**
- * Interceptando rotas globalmente, 
- * antes de cada rota vai ser rodado o callback passado no beforeEach
- * 
  * to   = rota de origem
  * from = rota de destino
  * next = comando que encaminha para rota, 
@@ -860,15 +862,16 @@ export default new Router({
  *        Pode ser passado uma rota especifica no next,
  *        ou passar um false para ele não seguir.
  * 
- * Nesse passo não temos acesso ao this porque o componente ainda não foi montado.
+ * 
  */
-router.beforeEach((to,from, next) => {
-    // eslint-disable-next-line no-console
-    console.log('antes das rotas');
+router.beforeEach((to, from, next) => {
+    console.log('Roda antes de todas rotas serem chamadas');
     next();
 })
+```
+Interceptando diretamente em uma rota.
 
-// diretamente em uma rota
+```js
 const router = new Router({
     mode: 'history',
     routes: [{
@@ -881,25 +884,32 @@ const router = new Router({
         }
     }
 }
+```
+Interceptando no componente que vai ser chamado pela rota.
 
-// no componente que vai ser chamado pela rota
+```js
 export default {
     beforeRouteEnter(to, from, next) {
-        // eslint-disable-next-line no-console
-        console.log('antes rota usuario detalhe');
+        console.log('Chamado antes rota do componente');
         next();
-    },
-    // antes de sair da rota
-    beforeRouteLeave(to, from, next) {
-    if (this.confirm) {
-      next()
-    } else {
-      if(confirm('tem certeza?')) {
-        next()
-      } else {
-        next(false)
-      }
     }
+  }
+}
+```
+
+Também é possivel interceptar antes de sair da rota.
+```js
+export default {
+    beforeRouteLeave(to, from, next) {
+        if (this.confirm) {
+            next()
+        } else {
+            if(confirm('Sair da rota?')) {
+                next()
+            } else {
+                next(false)
+            }
+        }
   }
 }
 ```
@@ -936,46 +946,46 @@ Plugins de terceiros: vue-cli-plugin-nomedoplugin
 ---
 ## 12. Referências
 
-Documentação Oficial - Introdução: https://br.vuejs.org/v2/guide/
+[Documentação Oficial - Introdução](https://br.vuejs.org/v2/guide/)
 
-Documentação Oficial - Sintaxe de Template: https://br.vuejs.org/v2/guide/syntax.html
+[Documentação Oficial - Sintaxe de Template](https://br.vuejs.org/v2/guide/syntax.html)
 
-Documentação Oficial - Manipulação de Eventos: https://br.vuejs.org/v2/guide/events.html
+[Documentação Oficial - Manipulação de Eventos](https://br.vuejs.org/v2/guide/events.html)
 
-Documentação Oficial - Dados Computados & Observadores: https://br.vuejs.org/v2/guide/computed.html
+[Documentação Oficial - Dados Computados & Observadores](https://br.vuejs.org/v2/guide/computed.html)
 
-Documentação Oficial - Interligações de Classe e Estilo: https://br.vuejs.org/v2/guide/class-and-style.html
+[Documentação Oficial - Interligações de Classe e Estilo](https://br.vuejs.org/v2/guide/class-and-style.html)
 
-Documentação Oficial - Renderização Condicional: https://br.vuejs.org/v2/guide/conditional.html
+[Documentação Oficial - Renderização Condicional](https://br.vuejs.org/v2/guide/conditional.html)
 
-Documentação Oficial - Renderização de Listas: https://br.vuejs.org/v2/guide/list.html
+[Documentação Oficial - Renderização de Listas](https://br.vuejs.org/v2/guide/list.html)
 
-Documentação Oficial - Instância Vue: https://br.vuejs.org/v2/guide/instance.html
+[Documentação Oficial - Instância Vue](https://br.vuejs.org/v2/guide/instance.html)
 
-Documentação oficial - Arquivo `.vue`: https://br.vuejs.org/v2/guide/single-file-components.html
+[Documentação oficial - Arquivo `.vue`](https://br.vuejs.org/v2/guide/single-file-components.html)
 
-Documentação oficial - método `render()`: https://br.vuejs.org/v2/guide/render-function.html
+[Documentação oficial - Método `render()`](https://br.vuejs.org/v2/guide/render-function.html)
 
-Documentação oficial - componentes: https://br.vuejs.org/v2/guide/components.html
+[Documentação oficial - Componentes](https://br.vuejs.org/v2/guide/components.html)
 
-Documentação oficial - registro de componentes: https://br.vuejs.org/v2/guide/components-registration.html
+[Documentação oficial - Registro de componentes](https://br.vuejs.org/v2/guide/components-registration.html)
 
-Documentação Oficial - Props: https://br.vuejs.org/v2/guide/components.html#Passando-Dados-aos-Filhos-com-Props
+[Documentação Oficial - Props](https://br.vuejs.org/v2/guide/components.html#Passando-Dados-aos-Filhos-com-Props)
 
-Documentação Oficial - Eventos Personalizados: https://br.vuejs.org/v2/guide/components.html#Enviando-Mensagens-ao-Pai-com-Eventos
+[Documentação Oficial - Eventos Personalizados](https://br.vuejs.org/v2/guide/components.html#Enviando-Mensagens-ao-Pai-com-Eventos)
 
-Documentação Oficial - Slots: https://br.vuejs.org/v2/guide/components.html#Distribuicao-de-Conteudo-com-Slots
+[Documentação Oficial - Slots](https://br.vuejs.org/v2/guide/components.html#Distribuicao-de-Conteudo-com-Slots)
 
-Documentação Oficial - Componentes Dinâmicos: https://br.vuejs.org/v2/guide/components.html#Componentes-Dinamicos
+[Documentação Oficial - Componentes Dinâmicos](https://br.vuejs.org/v2/guide/components.html#Componentes-Dinamicos)
 
-Documentação Oficial - Formulário: https://br.vuejs.org/v2/guide/forms.html
+[Documentação Oficial - Formulários](https://br.vuejs.org/v2/guide/forms.html)
 
-Documentação Oficial - Diretivas Personalizadas: https://br.vuejs.org/v2/guide/custom-directive.html
+[Documentação Oficial - Diretivas Personalizadas](https://br.vuejs.org/v2/guide/custom-directive.html)
 
-Documentação Oficial - Filtros: https://br.vuejs.org/v2/guide/filters.html
+[Documentação Oficial - Filtros](https://br.vuejs.org/v2/guide/filters.html)
 
-Documentação Oficial - Mixins: https://br.vuejs.org/v2/guide/mixins.html
+[Documentação Oficial - Mixins](https://br.vuejs.org/v2/guide/mixins.html)
 
-Vue Developer Tools: https://github.com/vuejs/vue-devtools
+[Vue Developer Tools](https://github.com/vuejs/vue-devtools)
 
-Vue CLI: https://cli.vuejs.org/
+[Vue CLI](https://cli.vuejs.org/)
