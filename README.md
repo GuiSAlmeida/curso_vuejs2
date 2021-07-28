@@ -620,7 +620,8 @@ npm install vue-router
 
 ### 10.1. Configuração
 
-`/src/router.js`
+`/src/router.js`  
+Cria-se um objeto Router com as configurações das rotas. 
 ```js
 import Vue from 'vue'
 import Router from 'vue-router'
@@ -637,7 +638,10 @@ export default new Router({
     ]
 })
 ```
-`/src/main.js`
+
+`/src/main.js`  
+No arquivo principal onde o webpack gera o bundle da aplicação é passado o router no objeto criado por meio da função construtora do 
+vue.
 ```js
 import Vue from 'vue'
 import App from './App.vue'
@@ -723,6 +727,17 @@ export default {
 }
 ```
 
+Além de `props` também é possivel aceesar dados da rota pelo **componente** por meio de `this.$route.params`.
+```js
+export default {
+    data() {
+        return {
+            id: this.$route.params.id
+        }
+    }
+}
+```
+
 ### 10.5. Rotas Aninhadas
 Para renderizar componentes aninhados, precisamos usar a opção `children` na configuração do **construtor** `VueRouter`.  
 
@@ -760,7 +775,8 @@ export default new Router({
     ]
 })
 ```
-No componente temos mais de uma maneira de chamar a rota.
+No componente temos mais de uma maneira de chamar a rota.  
+> A instância do router pode ser acessada globalmente por meio de `this.$router`.
 ```html
 <template>
     <div class="App">
@@ -933,10 +949,230 @@ const UserList = () => import(/* webpackChunkName: 'user' */'./components/user/U
 const UserDetail = () => import(/* webpackChunkName: 'user' */'./components/user/UserDetail')
 const UserEdit = () => import(/* webpackChunkName: 'user' */'./components/user/UserEdit')
 ```
+---
+## 11. Vuex
+O Vuex é um **padrão de gerenciamento de estado + biblioteca** para aplicações Vue.js. Ele serve como um **store** centralizado para todos os componentes em uma aplicação, com regras garantindo que o estado só possa ser mutado de forma previsível.  
 
+![image](https://user-images.githubusercontent.com/45276342/127239471-332e6dcb-4b1b-4fc0-a86e-19ee927214be.png)
+
+### 11.1. State
+Estado central da aplicação.  
+Cria-se arquivo `/src/store/store.js`
+```js
+import Vue from 'vue'
+import Vuex from 'vuex'
+
+Vue.use(Vuex)
+
+export default new Vuex.Store({
+    state: {
+        nome: 'Gui',
+        sobrenome: 'Almeida'
+    }
+})
+```
+
+Declara store no `main.js`
+```js
+import Vue from 'vue'
+import App from './App.vue'
+import store from './store/store'
+
+new Vue({
+    store, // store: store
+    render: h => h(App),
+}).$mount('#app')
+```
+
+Acessando `state` nos componentes
+```html
+<template>
+    <p>{{ nome }}</p>
+</template>
+
+<script>
+export default {
+    computed: {
+        nome() {
+            return this.$store.state.nome
+        }
+    }
+}
+</script>
+```
+
+### 11.2. Getters
+Funções que retornam informação (dados) do state.  
+
+![getter](https://user-images.githubusercontent.com/45276342/127073358-b6c7029b-8589-475b-977b-af3cb2a7bce9.png)
+
+Criando getter:
+```js
+export default new Vuex.Store({
+    state: {
+        nome: 'Gui',
+        sobrenome: 'Almeida'
+    }
+    getters: {
+        nomeCompleto(state){
+            `${state.nome} ${state.sobrenome}`
+        }
+    }
+})
+```
+
+Acessando getters no componente por meio do `this.$store.getters` ou pelo método `mapGetters`:
+```html
+<template>
+    <p>{{ nomeCompleto }}</p>
+</template>
+
+<script>
+import { mapGetters } from 'vuex'
+
+export default {
+    computed: {
+        nomeCompleto() {
+            return this.$store.getters.nomeCompleto
+        },
+        ...mapGetters({
+            'nomeCompleto'
+        })
+    }
+}
+</script>
+```
+
+### 11.3. Setters (Mutations)
+Alteram o estado global da aplicação, 
+por meio das `mutations` que possuem a finalidade de alterar a store diretamente e por isso devem ser sempre **sincronas**.
+
+![setter](https://user-images.githubusercontent.com/45276342/127151855-d9b7e2af-dbb1-45c2-96cd-fb7345756459.png)
+
+Criando mutations:
+```js
+export default new Vuex.Store({
+    state: {
+        nome: 'Gui',
+        sobrenome: 'Almeida',
+        hobbys: []
+    }
+    getters: {
+        nomeCompleto(state){
+            `${state.nome} ${state.sobrenome}`
+        }
+    },
+    mutations: {
+        addHobby(state, payload) {
+            state.hobbys.push(payload)
+        }
+    }
+})
+```
+
+Acessando mutations no componente pelo `this.$store.commit` ou pelo método `mapMutations`:
+```html
+<template>
+    <p>{{ nomeCompleto }}</p>
+    <p>Gosta de:</p>
+    <input type="number" v-model="hobby">
+    <button @click="addHobby">Adicionar!</button>
+
+    <ul>
+        <li v-for="hobby in hobbys">{{hobby}}</li>
+    </ul>
+</template>
+<script>
+import { mapMutations } from 'vuex'
+
+export default {
+    methods: {
+        ...mapMutations(['addHobby']),
+        addHobby() {
+            this.$store.commit('addHobby', hobby)
+        }
+    },
+    computed: {
+        hobbys() {
+            return this.$store.state.hobbys
+        }
+    }
+}
+</script>
+```
+
+### 11.4. Actions
+Trabalham com regras de negócio. Chamam mutations por meio de `commits`, Podemos realizar operações **assíncronas** dentro de uma action. 
+
+![image](https://user-images.githubusercontent.com/45276342/127229758-71667b5d-06d3-4434-85d0-6bfd307a9332.png)
+
+**dispatch**  
+Método para disparar as actions.
+
+```js
+// no store
+export default new Vuex.Store({
+    state: {
+        produtos: []
+    },
+    mutations: {
+        addProduto(state, payload) {
+            state.produtos.push(payload)
+        }
+    },
+    actions: {
+        addProdutoAction(context, payload) {
+            context.commit('addProduto', payload)
+        }
+    }
+})
+
+// no componente
+export default {
+    methods: {
+        adicionar() {
+            this.$store.dispatch('addProdutoAction', produto)
+        }
+    }
+}
+```
+
+**mapActions**  
+Cria um função nos methods com mesmo nome da action criada no store.
+
+```js
+// no store
+export default new Vuex.Store({
+    state: {
+        produtos: []
+    },
+    mutations: {
+        addProduto(state, payload) {
+            state.produtos.push(payload)
+        }
+    },
+    actions: {
+        addProdutoAction(context, payload) {
+            context.commit('addProduto', payload)
+        }
+    }
+})
+
+// no componente
+import { mapActions } from 'vuex'
+
+export default {
+    methods: {
+        ...mapActions(['addProdutoAction']),
+        adicionar() {
+            this.addProdutoAction(produto)
+        }
+    }
+}
+```
 
 ---
-## 11. Plugins
+## 12. Plugins
 Plugins oficiais do vue: @vue/cli-plugin-nomedoplugin  
 **Ex.:** @vue/cli-plugin-babel
 
@@ -944,7 +1180,7 @@ Plugins de terceiros: vue-cli-plugin-nomedoplugin
 **Ex.:** vue-cli-plugin-electron-builder
 
 ---
-## 12. Referências
+## 13. Referências
 
 [Documentação Oficial - Introdução](https://br.vuejs.org/v2/guide/)
 
@@ -987,5 +1223,7 @@ Plugins de terceiros: vue-cli-plugin-nomedoplugin
 [Documentação Oficial - Mixins](https://br.vuejs.org/v2/guide/mixins.html)
 
 [Vue Developer Tools](https://github.com/vuejs/vue-devtools)
+
+[Documentação do Vuex](https://vuex.vuejs.org/guide/)
 
 [Vue CLI](https://cli.vuejs.org/)
