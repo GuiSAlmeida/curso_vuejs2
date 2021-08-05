@@ -1021,6 +1021,18 @@ export default new Vuex.Store({
 })
 ```
 
+Um método getter pode receber como segundo parâmetro os `getters` de toda aplicação mesmo sendo criados a partir de outros módulos:  
+
+```js
+export default new Vuex.Store({
+    getters: {
+        getAnotherModuleData(state, getters){
+            return getters.anotherModuleGetter
+        }
+    }
+})
+```
+
 Acessando getters no componente por meio do `this.$store.getters` ou pelo método `mapGetters`:
 ```html
 <template>
@@ -1070,7 +1082,40 @@ export default new Vuex.Store({
 })
 ```
 
-Acessando mutations no componente pelo `this.$store.commit` ou pelo método `mapMutations`:
+**commit**  
+Você não pode chamar diretamente uma mutation pelo componente. Pense nisso mais como registro de evento: "Quando uma mutação com o tipo `addHobby` é acionada, chame este manipulador." Para invocar uma mutation, você precisa chamar `store.commit` com seu tipo.
+Disparando **mutations** no componente pelo `this.$store.commit`:
+```html
+<template>
+    <p>{{ nomeCompleto }}</p>
+    <p>Gosta de:</p>
+    <input type="number" v-model="hobby">
+    <button @click="addHobby">Adicionar!</button>
+
+    <ul>
+        <li v-for="hobby in hobbys">{{hobby}}</li>
+    </ul>
+</template>
+
+<script>
+export default {
+    methods: {
+        addHobby() {
+            this.$store.commit('addHobby', hobby)
+        }
+    },
+    computed: {
+        hobbys() {
+            return this.$store.state.hobbys
+        }
+    }
+}
+</script>
+```
+
+**mapMutations**  
+Cria um função nos `methods` com mesmo nome da mutation criada no store.  
+Acessando mutations no componente pelo método `mapMutations`:
 ```html
 <template>
     <p>{{ nomeCompleto }}</p>
@@ -1087,10 +1132,7 @@ import { mapMutations } from 'vuex'
 
 export default {
     methods: {
-        ...mapMutations(['addHobby']),
-        addHobby() {
-            this.$store.commit('addHobby', hobby)
-        }
+        ...mapMutations(['addHobby'])
     },
     computed: {
         hobbys() {
@@ -1102,7 +1144,7 @@ export default {
 ```
 
 ### 11.4. Actions
-Trabalham com regras de negócio. Chamam mutations por meio de `commits`, Podemos realizar operações **assíncronas** dentro de uma action. 
+Chamam mutations por meio de `commits`, podemos realizar operações **assíncronas** dentro de uma action.  
 
 ![image](https://user-images.githubusercontent.com/45276342/127229758-71667b5d-06d3-4434-85d0-6bfd307a9332.png)
 
@@ -1138,7 +1180,7 @@ export default {
 ```
 
 **mapActions**  
-Cria um função nos methods com mesmo nome da action criada no store.
+Cria um função nos `methods` com mesmo nome da action criada no store.
 
 ```js
 // no store
@@ -1169,6 +1211,81 @@ export default {
         }
     }
 }
+```
+
+### 11.5 Modules
+O Vuex nos permite dividir nosso store em módulos. 
+Cada módulo pode conter seu próprio estado, mutações, ações, getters e até módulos aninhados.  
+
+```js
+const moduloA = {
+  state: { ... },
+  getters: { ... },
+  mutations: { ... },
+  actions: { ... },
+}
+
+const moduloB = {
+  state: { ... },
+  mutations: { ... },
+  actions: { ... }
+}
+
+const store = new Vuex.Store({
+  modules: {
+    a: moduloA,
+    b: moduloB
+  }
+})
+
+this.$store.state.a // -> `moduloA`'s state
+this.$store.state.b // -> `moduloB`'s state
+```
+
+### 11.6 Namespacing
+Por padrão, ações, mutações e getters dentro dos **módulos** ainda são registrados sob o **namespace global** - isso permite que vários módulos reajam ao mesmo tipo de ação/mutação.  
+Se você quer que seus módulos sejam mais independentes ou reutilizáveis, você pode marcá-los como **namespaced** com `namespaced: true`. 
+Quando o módulo é registrado, todos os getters, ações e mutações serão automaticamente nomeados com base no caminho no qual o módulo está registrado.  
+```js
+const store = new Vuex.Store({
+  modules: {
+    account: {
+      namespaced: true,
+
+      // module assets
+      state: { ... }, // o estado do módulo já está aninhado e não é afetado pela opção de namespace
+      getters: {
+        isAdmin () { ... } // -> getters['account/isAdmin']
+      },
+      actions: {
+        login () { ... } // -> dispatch('account/login')
+      },
+      mutations: {
+        login () { ... } // -> commit('account/login')
+      },
+
+      // módulos aninhados
+      modules: {
+        // herda o namespace do modulo pai
+        myPage: {
+          state: { ... },
+          getters: {
+            profile () { ... } // -> getters['account/profile']
+          }
+        },
+
+        // aninhar ainda mais o namespace
+        posts: {
+          namespaced: true,
+          state: { ... },
+          getters: {
+            popular () { ... } // -> getters['account/posts/popular']
+          }
+        }
+      }
+    }
+  }
+})
 ```
 
 ---
